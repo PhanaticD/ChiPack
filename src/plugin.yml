@@ -1,0 +1,6 @@
+name: ChiPack
+main: me.simplicitee.chipack.ChiPack
+version: 1.0
+author: Simplicitee
+depend: [ProjectKorra]
+description: Pack of chiblocking abilities!
