@@ -4,3 +4,10 @@ version: 1.0
 author: Simplicitee
 depend: [ProjectKorra]
 description: Pack of chiblocking abilities!
+permissions:
+  bending.ability.jab:
+    default: true
+  bending.ability.chiblockjab:
+    default: true
+  bending.ability.flyingkick:
+    default: true    
