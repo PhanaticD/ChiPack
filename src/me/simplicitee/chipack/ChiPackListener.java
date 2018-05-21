@@ -35,7 +35,12 @@ public class ChiPackListener implements Listener{
 		
 		if (BendingPlayer.getBendingPlayer(player).getBoundAbilityName().equals("Jab")) {
 			if (BendingPlayer.getBendingPlayer(player).canBend(CoreAbility.getAbility("Jab"))) {
-				new Jab(player, entity, JabHand.RIGHT);
+				if (CoreAbility.hasAbility(player, Jab.class)) {
+					Jab jab = CoreAbility.getAbility(player, Jab.class);
+					jab.activate(entity, JabHand.RIGHT);
+				} else {
+					new Jab(player, entity, JabHand.RIGHT);
+				}
 			}
 		}
 	}
@@ -49,7 +54,12 @@ public class ChiPackListener implements Listener{
 		
 		if (BendingPlayer.getBendingPlayer(player).getBoundAbilityName().equals("Jab")) {
 			if (BendingPlayer.getBendingPlayer(player).canBend(CoreAbility.getAbility("Jab"))) {
-				new Jab(player, entity, JabHand.LEFT);
+				if (CoreAbility.hasAbility(player, Jab.class)) {
+					Jab jab = CoreAbility.getAbility(player, Jab.class);
+					jab.activate(entity, JabHand.LEFT);
+				} else {
+					new Jab(player, entity, JabHand.LEFT);
+				}
 			}
 		}
 	}

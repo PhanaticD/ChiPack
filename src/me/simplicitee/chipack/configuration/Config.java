@@ -9,7 +9,7 @@ import me.simplicitee.chipack.ChiPack;
 
 public class Config {
 	
-	private ChiPack plugin = ChiPack.get();
+	private ChiPack plugin;
 	
 	public File file;
 	public FileConfiguration config;
@@ -19,7 +19,8 @@ public class Config {
 	}
 	
 	public Config(File file) {
-		this.file = new File(plugin.getDataFolder() + File.pathSeparator + file);
+		this.plugin = ChiPack.get();
+		this.file = new File(plugin.getDataFolder() + File.separator + file);
 		this.config = YamlConfiguration.loadConfiguration(file);
 		reload();
 	}
@@ -33,7 +34,7 @@ public class Config {
 	public void create() {
 		if (!file.getParentFile().exists()) {
 			try {
-				file.getParentFile().mkdir();
+				file.getParentFile().mkdirs();
 				plugin.getLogger().info("Generating new directory for " + file.getName() + "!");
 			}
 			catch (Exception e) {

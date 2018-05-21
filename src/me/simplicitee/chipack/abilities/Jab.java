@@ -1,9 +1,8 @@
 package me.simplicitee.chipack.abilities;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.projectkorra.projectkorra.ability.AddonAbility;
@@ -18,91 +17,93 @@ public class Jab extends ChiAbility implements AddonAbility{
 		RIGHT, LEFT;
 	}
 	
-	public static ConcurrentHashMap<Player, Integer> uses = new ConcurrentHashMap<>();
-	
-	private Entity entity;
-	private JabHand hand;
-	
-	private long cooldown = ConfigHandler.getConfig().getLong("Abilities.Jab.Cooldown");
-	private int maxUses = ConfigHandler.getConfig().getInt("Abilities.Jab.MaxUses");
+	private int uses = 0;
+	private long cooldown;
+	private int maxUses;
 
 	public Jab(Player player, Entity entity, JabHand hand) {
 		super(player);
-		this.hand = hand;
-		this.entity = entity;
-		if (!uses.containsKey(player)) {
-			uses.put(player, 0);
-		}
+		
+		cooldown = ConfigHandler.getConfig().getLong("Abilities.Jab.Cooldown");
+		maxUses = ConfigHandler.getConfig().getInt("Abilities.Jab.MaxUses");
+		
 		start();
+		activate(entity, hand);
+	}
+	
+	public void activate(Entity entity, JabHand hand) {
+		if (entity instanceof LivingEntity) {
+			LivingEntity lent = (LivingEntity) entity;
+			uses++;
+			
+			if (hand == JabHand.LEFT) {
+				DamageHandler.damageEntity(entity, player, 1, this);
+			}
+			lent.setNoDamageTicks(0);
+		}
 	}
 
 	@Override
 	public long getCooldown() {
-		// TODO Auto-generated method stub
 		return cooldown;
 	}
 
 	@Override
 	public Location getLocation() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "Jab";
 	}
 
 	@Override
 	public boolean isHarmlessAbility() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isSneakAbility() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void progress() {
-		uses.put(player, uses.get(player) + 1);
-		if (uses.get(player) == maxUses) {
-			uses.put(player, 0);
+		if (uses >= maxUses) {
+			remove();
 			bPlayer.addCooldown(this);
 		}
-		
-		if (hand == JabHand.LEFT) {
-			DamageHandler.damageEntity(entity, player, 1, this);
-		}
-		
-		remove();
+	}
+	
+	@Override
+	public String getDescription() {
+		return ConfigHandler.getLang().getString("Abilities.Jab.Description");
+	}
+	
+	@Override
+	public String getInstructions() {
+		return "Left click or Right click";
 	}
 
 	@Override
 	public String getAuthor() {
-		// TODO Auto-generated method stub
-		return "Simplicitee";
+		return "Simp";
 	}
 
 	@Override
 	public String getVersion() {
-		// TODO Auto-generated method stub
-		return "1.0 (SimpHub)";
+		return "ChiPack";
 	}
 
 	@Override
-	public void load() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void load() {}
 
 	@Override
-	public void stop() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void stop() {}
 	
+	@Override
+	public boolean isEnabled() {
+		return ConfigHandler.getConfig().getBoolean("Abilities.Jab.Enabled");
+	}
 }
