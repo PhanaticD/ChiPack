@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ChiAbility;
 import com.projectkorra.projectkorra.util.DamageHandler;
+import com.projectkorra.projectkorra.util.ParticleEffect;
 
+import me.simplicitee.chipack.abilities.combos.WeakeningJab;
 import me.simplicitee.chipack.configuration.ConfigHandler;
 
 public class Jab extends ChiAbility implements AddonAbility{
@@ -36,9 +38,13 @@ public class Jab extends ChiAbility implements AddonAbility{
 			LivingEntity lent = (LivingEntity) entity;
 			uses++;
 			
+			ParticleEffect.END_ROD.display(entity.getLocation().clone().add(0, 1, 0), 0.2f, 0.2f, 0.2f, 0.02f, 4);
 			if (hand == JabHand.LEFT) {
-				DamageHandler.damageEntity(entity, player, 1, this);
+				double damage = WeakeningJab.isAffected(lent) ? WeakeningJab.getModifier() : 1;
+				
+				DamageHandler.damageEntity(entity, player, damage, this);
 			}
+			
 			lent.setNoDamageTicks(0);
 		}
 	}

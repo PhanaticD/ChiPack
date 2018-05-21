@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.GeneralMethods;
@@ -14,27 +13,37 @@ import com.projectkorra.projectkorra.ability.ChiAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
 import com.projectkorra.projectkorra.util.ClickType;
+import com.projectkorra.projectkorra.util.ParticleEffect;
 
-import me.simplicitee.chipack.ChiPack;
 import me.simplicitee.chipack.configuration.ConfigHandler;
 
 public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbility{
 	
 	private Player attacked;
 	private long duration;
+	private BendingPlayer bp;
 
 	public ChiblockJab(Player player) {
 		super(player);
+		
 		Entity entity = GeneralMethods.getTargetedEntity(player, 4);
+		
 		if (entity instanceof Player) {
 			attacked = (Player) entity;
 		} else {
 			return;
 		}
+		
+		duration = ConfigHandler.getConfig().getLong("Combos.ChiblockJab.Duration");
+		
 		if (attacked != null) {
-			start();
+			bp = BendingPlayer.getBendingPlayer(attacked);
+			
+			if (bp != null) {
+				bp.blockChi();
+				start();
+			}
 		}
-		bPlayer.addCooldown("Jab", getCooldown());
 	}
 
 	@Override
@@ -64,18 +73,11 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 
 	@Override
 	public void progress() {
-		BendingPlayer bp = BendingPlayer.getBendingPlayer(attacked);
-		if (bp != null) {
-			bp.blockChi();
-			
-			new BukkitRunnable() {
-
-				@Override
-				public void run() {
-					bp.unblockChi();
-				}
-				
-			}.runTaskLater(ChiPack.plugin, (duration/1000)*20);
+		ParticleEffect.CRIT.display(attacked.getLocation().clone().add(0, 1, 0), 0.2f, 1.0f, 0.2f, 0.04f, 3);
+		if (System.currentTimeMillis() >= getStartTime() + duration) {
+			remove();
+			bPlayer.addCooldown(this);
+			bp.unblockChi();
 		}
 	}
 
@@ -88,7 +90,7 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 	public ArrayList<AbilityInformation> getCombination() {
 		ArrayList<AbilityInformation> combo = new ArrayList<>();
 		combo.add(new AbilityInformation("Jab", ClickType.RIGHT_CLICK_ENTITY));
-		combo.add(new AbilityInformation("Jab", ClickType.LEFT_CLICK));
+		combo.add(new AbilityInformation("Jab", ClickType.LEFT_CLICK_ENTITY));
 		combo.add(new AbilityInformation("Jab", ClickType.RIGHT_CLICK_ENTITY));
 		return combo;
 	}

@@ -16,6 +16,7 @@ import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
+import com.projectkorra.projectkorra.util.ParticleEffect;
 
 import me.simplicitee.chipack.configuration.ConfigHandler;
 
@@ -89,6 +90,7 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 			return;
 		}
 		
+		ParticleEffect.MAGIC_CRIT.display(player.getLocation(), 0.2f, 0.2f, 0.2f, 0.02f, 3);
 		for (Entity entity : GeneralMethods.getEntitiesAroundPoint(player.getLocation(), 2)) {
 			if (entity instanceof LivingEntity && entity.getEntityId() != player.getEntityId()) {
 				DamageHandler.damageEntity(entity, player, damage, this);
