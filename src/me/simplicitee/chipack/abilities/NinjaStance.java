@@ -129,7 +129,7 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 	
 	@Override
 	public String getInstructions() {
-		return "Left click to begin to this stance";
+		return "Left click to begin to this stance > Hold sneak to begin stealth mode";
 	}
 	
 	@Override
