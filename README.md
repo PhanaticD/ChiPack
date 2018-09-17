@@ -5,3 +5,4 @@ Included:
 * NinjaStance ability
 * ChiblockJab combo
 * FlyingKick combo
+* WeakeningJab combo
