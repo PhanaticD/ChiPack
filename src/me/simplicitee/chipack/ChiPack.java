@@ -1,25 +1,23 @@
 package me.simplicitee.chipack;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.*;
+import org.bukkit.event.*;
+import org.bukkit.plugin.*;
+import me.simplicitee.chipack.configuration.*;
+import com.projectkorra.projectkorra.ability.*;
 
-import com.projectkorra.projectkorra.ability.CoreAbility;
-
-import me.simplicitee.chipack.configuration.ConfigHandler;
-
-public class ChiPack extends JavaPlugin{
-	
-	public static ChiPack plugin;
-
-	@Override
-	public void onEnable() {
-		plugin = this;
-		
-		getServer().getPluginManager().registerEvents(new ChiPackListener(), this);
-		new ConfigHandler();
-		CoreAbility.registerPluginAbilities(this, "me.simplicitee.chipack.abilities");
-	}
-	
-	public static ChiPack get() {
-		return plugin;
-	}
+public class ChiPack extends JavaPlugin
+{
+    public static ChiPack plugin;
+    
+    public void onEnable() {
+        ChiPack.plugin = this;
+        this.getServer().getPluginManager().registerEvents((Listener)new ChiPackListener(), (Plugin)this);
+        new ConfigHandler();
+        CoreAbility.registerPluginAbilities((JavaPlugin)this, "me.simplicitee.chipack.abilities");
+    }
+    
+    public static ChiPack get() {
+        return ChiPack.plugin;
+    }
 }

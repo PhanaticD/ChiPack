@@ -1,115 +1,99 @@
 package me.simplicitee.chipack.abilities;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import me.simplicitee.chipack.configuration.*;
+import org.bukkit.entity.*;
+import me.simplicitee.chipack.abilities.combos.*;
+import com.projectkorra.projectkorra.util.*;
+import com.projectkorra.projectkorra.ability.*;
+import org.bukkit.*;
 
-import com.projectkorra.projectkorra.ability.AddonAbility;
-import com.projectkorra.projectkorra.ability.ChiAbility;
-import com.projectkorra.projectkorra.util.DamageHandler;
-import com.projectkorra.projectkorra.util.ParticleEffect;
-
-import me.simplicitee.chipack.abilities.combos.WeakeningJab;
-import me.simplicitee.chipack.configuration.ConfigHandler;
-
-public class Jab extends ChiAbility implements AddonAbility{
-	
-	public static enum JabHand {
-		RIGHT, LEFT;
-	}
-	
-	private int uses = 0;
-	private long cooldown;
-	private int maxUses;
-
-	public Jab(Player player, Entity entity, JabHand hand) {
-		super(player);
-		
-		cooldown = ConfigHandler.getConfig().getLong("Abilities.Jab.Cooldown");
-		maxUses = ConfigHandler.getConfig().getInt("Abilities.Jab.MaxUses");
-		
-		start();
-		activate(entity, hand);
-	}
-	
-	public void activate(Entity entity, JabHand hand) {
-		if (entity instanceof LivingEntity) {
-			LivingEntity lent = (LivingEntity) entity;
-			uses++;
-			
-			ParticleEffect.END_ROD.display(entity.getLocation().clone().add(0, 1, 0), 0.2f, 0.2f, 0.2f, 0.02f, 4);
-			if (hand == JabHand.LEFT) {
-				double damage = WeakeningJab.isAffected(lent) ? WeakeningJab.getModifier() : 1;
-				
-				DamageHandler.damageEntity(entity, player, damage, this);
-			}
-			
-			lent.setNoDamageTicks(0);
-		}
-	}
-
-	@Override
-	public long getCooldown() {
-		return cooldown;
-	}
-
-	@Override
-	public Location getLocation() {
-		return null;
-	}
-
-	@Override
-	public String getName() {
-		return "Jab";
-	}
-
-	@Override
-	public boolean isHarmlessAbility() {
-		return false;
-	}
-
-	@Override
-	public boolean isSneakAbility() {
-		return false;
-	}
-
-	@Override
-	public void progress() {
-		if (uses >= maxUses) {
-			remove();
-			bPlayer.addCooldown(this);
-		}
-	}
-	
-	@Override
-	public String getDescription() {
-		return ConfigHandler.getLang().getString("Abilities.Jab.Description");
-	}
-	
-	@Override
-	public String getInstructions() {
-		return "Left click or Right click";
-	}
-
-	@Override
-	public String getAuthor() {
-		return "Simp";
-	}
-
-	@Override
-	public String getVersion() {
-		return "ChiPack";
-	}
-
-	@Override
-	public void load() {}
-
-	@Override
-	public void stop() {}
-	
-	@Override
-	public boolean isEnabled() {
-		return ConfigHandler.getConfig().getBoolean("Abilities.Jab.Enabled");
-	}
+public class Jab extends ChiAbility implements AddonAbility
+{
+    private int uses;
+    private long cooldown;
+    private int maxUses;
+    
+    public Jab(final Player player, final Entity entity, final JabHand hand) {
+        super(player);
+        this.uses = 0;
+        this.cooldown = ConfigHandler.getConfig().getLong("Abilities.Jab.Cooldown");
+        this.maxUses = ConfigHandler.getConfig().getInt("Abilities.Jab.MaxUses");
+        this.start();
+        this.activate(entity, hand);
+    }
+    
+    public void activate(final Entity entity, final JabHand hand) {
+        if (entity instanceof LivingEntity) {
+            final LivingEntity lent = (LivingEntity)entity;
+            ++this.uses;
+            ParticleEffect.END_ROD.display(entity.getLocation().clone().add(0.0, 1.0, 0.0), 4, 0.2f, 0.2f, 0.2f, 0.02f);
+            if (hand == JabHand.LEFT) {
+                final double damage = WeakeningJab.isAffected((Entity)lent) ? WeakeningJab.getModifier() : 1.0;
+                DamageHandler.damageEntity(entity, this.player, damage, (Ability)this);
+            }
+            lent.setNoDamageTicks(0);
+        }
+    }
+    
+    public long getCooldown() {
+        return this.cooldown;
+    }
+    
+    public Location getLocation() {
+        return null;
+    }
+    
+    public String getName() {
+        return "Jab";
+    }
+    
+    public boolean isHarmlessAbility() {
+        return false;
+    }
+    
+    public boolean isSneakAbility() {
+        return false;
+    }
+    
+    public void progress() {
+        if (this.uses >= this.maxUses) {
+            this.remove();
+            this.bPlayer.addCooldown((Ability)this);
+        }
+    }
+    
+    public String getDescription() {
+        return ConfigHandler.getLang().getString("Abilities.Jab.Description");
+    }
+    
+    public String getInstructions() {
+        return "Left click or Right click";
+    }
+    
+    public String getAuthor() {
+        return "Simp";
+    }
+    
+    public String getVersion() {
+        return "ChiPack";
+    }
+    
+    public void load() {
+    }
+    
+    public void stop() {
+    }
+    
+    public boolean isEnabled() {
+        return ConfigHandler.getConfig().getBoolean("Abilities.Jab.Enabled");
+    }
+    
+    public enum JabHand
+    {
+        RIGHT("RIGHT", 0), 
+        LEFT("LEFT", 1);
+        
+        private JabHand(final String s, final int n) {
+        }
+    }
 }

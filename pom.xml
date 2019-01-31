@@ -1,31 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>ChiPack</groupId>
-  <artifactId>ChiPack</artifactId>
-  <version>1.2.0</version>
-  
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>me.simplicitee.chipack</groupId>
+    <artifactId>ChiPack</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+  <repositories>
+    <repository>
+      <id>spigot-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
   <dependencies>
-  	<!-- Spigot API -->
-  	<dependency>
-    	<groupId>org.spigotmc</groupId>
-    	<artifactId>Spigot-Server</artifactId>
-    	<version>LATEST</version>
-    	<scope>system</scope>
-    	<systemPath>${project.basedir}/lib/spigot-1.12.2.jar</systemPath>
+    <!-- Spigot API -->
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.13.2-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
     <!-- ProjectKorra -->
     <dependency>
-    	<groupId>com.projectkorra</groupId>
-    	<artifactId>projectkorra</artifactId>
-    	<version>1.8.6</version>
-    	<scope>system</scope>
-    	<systemPath>${project.basedir}/lib/ProjectKorra-1.8.6.jar</systemPath>
+      <groupId>com.projectkorra</groupId>
+      <artifactId>projectkorra</artifactId>
+      <version>1.8.7</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
-    <defaultGoal>clean package install</defaultGoal>
-    <finalName>${project.name}-${project.version}</finalName>
+    <defaultGoal>clean package</defaultGoal>
+    <finalName>${project.name}</finalName>
     <sourceDirectory>${project.basedir}/src/</sourceDirectory>
     <resources>
       <resource>
@@ -47,23 +52,19 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-	  <plugin>
-	    <artifactId>maven-shade-plugin</artifactId>
-		<version>2.3</version>
-		<executions>
-		  <execution>
-		    <phase>package</phase>
-			<goals>
-			  <goal>shade</goal>
-			</goals>
-		  </execution>
-		</executions>
-	    <configuration />
-	  </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+          <outputDirectory>${dir}</outputDirectory>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <dir>${project.build.directory}</dir>
   </properties>
 </project>
